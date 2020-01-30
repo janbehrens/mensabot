@@ -62,7 +62,7 @@ async function getSpeiseplan() {
     }
 
     postParams.text = '#### Heute in der Mensa:\n\n' +
-      dishes.map(dish => `##### ${dish.description}\n##### ${dish.labels.join(' ')}\n${dish.price}\n`).join('\n')
+      dishes.map(dish => `##### ${dish.description} ${dish.labels.join(' ')}\n${dish.price}\n`).join('\n')
   })
 
   axios.post(webhookUrl, postParams).catch((error) => {
