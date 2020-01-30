@@ -18,7 +18,7 @@ const symbols = {
   '/uploads/icons/636506d11657da1d9d85fc04e0230ab111954912.png': 'mit-gefluegel',
   '/uploads/icons/605801019ea63cf45702f2a2beb9cb9fc64b6b07.png': 'mit-schwein',
   '/uploads/icons/73927cb7f802b5b09d72e703bc5dc4481bfd31b7.png': 'lieblingsessen',
-  '/uploads/icons/0e5bab8a7d0af8f5bdbaa75dc217ed76a6186584.png': 'neues-gericht'
+  '/uploads/icons/0c0f748ff76ae29d2ca5b36d5fe803709efd4585.jpg': 'neues-gericht'
 }
 
 const postParams = {}
