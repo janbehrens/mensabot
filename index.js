@@ -3,8 +3,8 @@ const DOMParser = require('xmldom').DOMParser
 const parser = new DOMParser()
 const axios = require('axios')
 
-const webhookUrl = 'https://mattermost.csl-intern.local.hcu-hamburg.de/hooks/' + process.env.MENSA_WEBHOOK_SECRET
-const speiseplanURL = 'https://speiseplan.studierendenwerk-hamburg.de/de/430/2020/0/'
+const webhookUrl = `https://mattermost.csl-intern.local.hcu-hamburg.de/hooks/${process.env.WEBHOOK_SECRET}`
+const speiseplanURL = `https://speiseplan.studierendenwerk-hamburg.de/${process.env.LANG_ID}/${process.env.CAFETERIA_ID}/2020/0/`
 
 const symbols = {
   '/uploads/icons/e9a8e409409cf3ff7a40855d08e89097d6168e29.png': 'cow',
@@ -26,13 +26,13 @@ const postParams = {}
 async function getSpeiseplan() {
   await axios.get(speiseplanURL).then((response) => {
     let html = response.data
-    let dom = parser.parseFromString(html, 'text/html');
+    let dom = parser.parseFromString(html, 'text/html')
     let cells = dom.getElementsByTagName('td')
     let dishes = []
 
     // First cell in each row: name of dish, second to fourth cell: prices
     for (let i = 0; i < cells.length; i += 4) {
-      let description = cells[i].textContent.trim().replace(/<span class=tooltip title=Milch\/-erzeugnisse \(einschl. Laktose\)>La/g, 'La');
+      let description = cells[i].textContent.trim().replace(/<span class=tooltip title=Milch\/-erzeugnisse \(einschl. Laktose\)>/g, '')
       let icons = cells[i].getElementsByTagName('img')
       let labels = []
 
