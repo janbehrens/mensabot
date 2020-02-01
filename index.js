@@ -24,50 +24,48 @@ const symbols = {
 const postParams = {}
 
 async function getSpeiseplan() {
-  await axios.get(speiseplanURL).then((response) => {
-    let html = response.data
-    let dom = parser.parseFromString(html, 'text/html')
-    let cells = dom.getElementsByTagName('td')
-    let dishes = []
+  let response = await axios.get(speiseplanURL)
 
-    // First cell in each row: name of dish, second to fourth cell: prices
-    for (let i = 0; i < cells.length; i += 4) {
-      let description = cells[i].textContent.trim().replace(/<span class=tooltip title=Milch\/-erzeugnisse \(einschl. Laktose\)>/g, '')
-      let icons = cells[i].getElementsByTagName('img')
-      let labels = []
+  let html = response.data
+  let dom = parser.parseFromString(html, 'text/html')
+  let cells = dom.getElementsByTagName('td')
+  let dishes = []
 
-      for (let j = 0; j < icons.length; j++) {
-        if (icons[j].nodeName === 'img') {
-          let image = icons[j]
+  // First cell in each row: name of dish, second to fourth cell: prices
+  for (let i = 0; i < cells.length; i += 4) {
+    let description = cells[i].textContent.trim().replace(/<span .*>/g, '')
+    let icons = cells[i].getElementsByTagName('img')
+    let labels = []
 
-          for (let k = 0; k < image.attributes.length; k++) {
-            let attr = image.attributes[k]
-            if (attr.name === 'src') {
-              labels.push(`:${symbols[attr.value]}:`)
-            }
+    for (let j = 0; j < icons.length; j++) {
+      if (icons[j].nodeName === 'img') {
+        let image = icons[j]
+
+        for (let k = 0; k < image.attributes.length; k++) {
+          let attr = image.attributes[k]
+          if (attr.name === 'src') {
+            labels.push(`:${symbols[attr.value]}:`)
           }
         }
       }
-      let prices = [
-        cells[i + 1].textContent.trim().replace(/&euro;/, '€'),
-        cells[i + 2].textContent.trim().replace(/&euro;/, '€'),
-        cells[i + 3].textContent.trim().replace(/&euro;/, '€')
-      ]
-      let dish = {
-        description: description,
-        labels: labels,
-        price: prices.join(' | ')
-      }
-      dishes.push(dish)
     }
+    let prices = [
+      cells[i + 1].textContent.trim().replace(/&euro;/, '€'),
+      cells[i + 2].textContent.trim().replace(/&euro;/, '€'),
+      cells[i + 3].textContent.trim().replace(/&euro;/, '€')
+    ]
+    let dish = {
+      description: description,
+      labels: labels,
+      price: prices.join(' | ')
+    }
+    dishes.push(dish)
+  }
 
-    postParams.text = '#### Heute in der Mensa:\n\n' +
-      dishes.map(dish => `##### ${dish.description} ${dish.labels.join(' ')}\n${dish.price}\n`).join('\n')
-  })
+  postParams.text = (process.env.LANG_ID === 'de' ? '#### Heute in der Mensa:\n\n' : '#### Today’s menu:\n\n') +
+    dishes.map(dish => `##### ${dish.description} ${dish.labels.join(' ')}\n${dish.price}\n`).join('\n')
 
-  axios.post(webhookUrl, postParams).catch((error) => {
-    console.log(error)
-  })
+  axios.post(webhookUrl, postParams)
 }
 
 getSpeiseplan()
