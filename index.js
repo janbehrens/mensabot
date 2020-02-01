@@ -3,9 +3,10 @@ const DOMParser = require('xmldom').DOMParser
 const parser = new DOMParser()
 const axios = require('axios')
 
-const webhookUrl = `https://mattermost.csl-intern.local.hcu-hamburg.de/hooks/${process.env.WEBHOOK_SECRET}`
+const webhookUrl = process.env.MATTERMOST_WEBHOOK
 const speiseplanURL = `https://speiseplan.studierendenwerk-hamburg.de/${process.env.LANG_ID}/${process.env.CAFETERIA_ID}/2020/0/`
 
+// Map icon URLs to Mattermost emoji
 const symbols = {
   '/uploads/icons/e9a8e409409cf3ff7a40855d08e89097d6168e29.png': 'cow',
   '/uploads/icons/82cc2fece681d1b080ceb0b63d2971f8e33c3d43.png': 'klima-teller',

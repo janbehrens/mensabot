@@ -6,7 +6,7 @@ A simple bot that parses the current menu of any of [Studierendenwerk Hamburg](h
 
 Create a `.env` file with configuration options in the root directory:
 ```
-WEBHOOK_SECRET=last part of the webhook URL
+MATTERMOST_WEBHOOK=webhook URL
 LANG_ID=de or en
 CAFETERIA_ID=see link above to find your cafeteria's ID
 ```
